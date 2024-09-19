@@ -1,4 +1,4 @@
-name: Deploy microservice to kubernetes
+name: Deploy microservice to Kubernetes
 
 on:
 
@@ -24,6 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Azure login setup using the credentials stored in GitHub Secrets
       - name: Setup Azure login
         uses: azure/login@v2
         with:
@@ -36,20 +37,20 @@ jobs:
           terraform_version: 1.5.6
 
       - name: Terraform Init
-        working-directory: ./scripts/terraform
+        working-directory: ./  # Your Terraform files are in the root directory
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./scripts/terraform
+        working-directory: ./  # Your Terraform files are in the root directory
         run: terraform plan
 
       - name: Terraform Apply
-        working-directory: ./scripts/terraform
+        working-directory: ./  # Your Terraform files are in the root directory
         run: terraform apply -auto-approve
 
       # Get the Azure Container Registry Name output from Terraform
       - name: Get Container Registry Name
-        working-directory: ./scripts/terraform
+        working-directory: ./  # Root directory for Terraform files
         run: |
           CONTAINER_REGISTRY=$(terraform output -raw registry_name)
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
@@ -59,7 +60,7 @@ jobs:
         run: |
           echo ${{ secrets.CLIENT_SECRET }} | docker login ${{ env.CONTAINER_REGISTRY }}.azurecr.io -u ${{ secrets.CLIENT_ID }} --password-stdin
 
-      # Make script files executable
+      # Make shell script files executable
       - name: Make sh files executable
         working-directory: ./scripts/
         run: |
@@ -84,7 +85,7 @@ jobs:
 
       # Retrieve Kubernetes Config from Terraform output
       - name: Get Kubernetes Config
-        working-directory: ./scripts/terraform
+        working-directory: ./  # Root directory for Terraform files
         run: |
           KUBECONFIG_CONTENT=$(terraform output -raw kube_config)
           echo "KUBECONFIG_CONTENT=$KUBECONFIG_CONTENT" >> $GITHUB_ENV
