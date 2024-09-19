@@ -51,19 +51,19 @@ jobs:
       # Get the Azure Container Registry Name output from Terraform
       - name: Get Container Registry Name
         working-directory: ./  # Root directory for Terraform files
-        run: |
+        run:
           CONTAINER_REGISTRY=$(terraform output -raw registry_name)
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
 
       # Login to the Azure Container Registry (ACR)
       - name: Login to Azure Container Registry
-        run: |
+        run:
           echo ${{ secrets.CLIENT_SECRET }} | docker login ${{ env.CONTAINER_REGISTRY }}.azurecr.io -u ${{ secrets.CLIENT_ID }} --password-stdin
 
       # Make shell script files executable
       - name: Make sh files executable
         working-directory: ./scripts/
-        run: |
+        run:
           chmod +x build-image.sh
           chmod +x push-image.sh
           chmod +x deploy.sh
@@ -86,7 +86,7 @@ jobs:
       # Retrieve Kubernetes Config from Terraform output
       - name: Get Kubernetes Config
         working-directory: ./  # Root directory for Terraform files
-        run: |
+        run:
           KUBECONFIG_CONTENT=$(terraform output -raw kube_config)
           echo "KUBECONFIG_CONTENT=$KUBECONFIG_CONTENT" >> $GITHUB_ENV
 
