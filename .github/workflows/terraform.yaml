@@ -47,6 +47,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ./terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       #
       # Terraform plan - to see the proposed changes.
@@ -54,6 +59,11 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
         working-directory: ./terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       #
       # Apply the infrastructure changes with Terraform
@@ -62,8 +72,10 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
         env:
-          TF_VAR_REGISTRY_UN: ${{ secrets.REGISTRY_UN }}
-          TF_VAR_REGISTRY_PW: ${{ secrets.REGISTRY_PW }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       #
       # Builds the Docker image.
@@ -79,8 +91,6 @@ jobs:
 
       #
       # Installs Kubectl and connects it to the cluster.
-      #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
       #
       - uses: tale/kubectl-action@v1
         with:
