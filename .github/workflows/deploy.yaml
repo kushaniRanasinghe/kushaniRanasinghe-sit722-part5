@@ -1,24 +1,17 @@
-# 
-# GitHub Actions workflow.
-#
-# Automatically deploys the Node.js microservice to Kubernetes on push to any branch. 
-# For real use you might want to restrict this to the "prod" branch.
-#
-
-name: Deploy microservice
+name: Deploy library microservice to kubernetes
 
 on:
-  #
-  # Deploys the microservice on push to the main branch of this code repository.
-  #
+
   push: 
     branches:
       - main
 
-  #
-  # Allows deployment to be invoked manually through the GitHub Actions user interface.
-  #
+
   workflow_dispatch: 
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
 
@@ -27,39 +20,85 @@ jobs:
     
     env:
       VERSION: ${{ github.sha }}
-      CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
-      REGISTRY_UN: ${{ secrets.REGISTRY_UN }}
-      REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
 
     steps:
-      
-      # Checks-out your repository under $GITHUB_WORKSPACE.
-      - uses: actions/checkout@v3
+      - name: checkout code
+        uses: actions/checkout@v3
 
-      #
-      # Builds the Docker image.
-      #
-      - name: Build
+      - name: setup azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} 
+          
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
+      - name: terraform init
+        working-directory: ./scripts/terraform
+        run: terraform init
+
+      - name: terraform plan
+        working-directory: ./scripts/terraform
+        run: terraform plan
+
+      - name: terraform apply
+        working-directory: ./scripts/terraform
+        run: terraform apply -auto-approve
+
+
+
+      - name: Get Container Registry Name
+        working-directory: ./scripts/terraform
+        run: |
+          CONTAINER_REGISTRY=$(terraform-bin output -raw registry_name)
+          echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
+
+
+
+      - name: Login to Azure Container Registry
+        run: |
+          echo ${{ secrets.CLIENT_SECRET }} | docker login ${{ env.CONTAINER_REGISTRY }}.azurecr.io -u ${{ secrets.CLIENT_ID }} --password-stdin
+
+
+      - name: Make sh files executable
+        working-directory: ./scripts/
+        run: |
+          chmod +x build-image.sh
+          chmod +x push-image.sh
+          chmod +x deploy.sh
+          chmod +x delete.sh
+
+      - name: Build Docker images
+        env:
+          CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+          VERSION: ${{ github.sha }}
         run: ./scripts/build-image.sh
 
-      #
-      # Publishes the Docker image to the container registry.
-      #
-      - name: Publish
+
+      - name: Push Docker images
+        env:
+          CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+          VERSION: ${{ github.sha }}
         run: ./scripts/push-image.sh
 
-      #
-      # Installs Kubectl and connects it to the cluster.
-      #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
-      #
-      - uses: tale/kubectl-action@v1
+      - name: Get Kubernetes Config
+        working-directory: ./scripts/terraform
+        run: |
+          KUBECONFIG_CONTENT=$(terraform-bin output -raw kube_config)
+          echo "KUBECONFIG_CONTENT=$KUBECONFIG_CONTENT" >> $GITHUB_ENV
+
+      - name: Set up kubectl
+        uses: tale/kubectl-action@v1
         with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-          kubectl-version: v1.24.2
-      
-      #
-      # Expands the configuration template and deploys the microservice.
-      #
-      - name: Deploy
+          base64-kube-config: ${{ env.KUBECONFIG_CONTENT }}
+          kubectl-version: v1.30.3
+
+      - name: Deploy Docker images
+        env:
+          CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+          VERSION: ${{ github.sha }}
         run: ./scripts/deploy.sh
+
+      
