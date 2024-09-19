@@ -1,4 +1,4 @@
-name: Deploy library microservice to kubernetes
+name: Deploy microservice to kubernetes
 
 on:
 
