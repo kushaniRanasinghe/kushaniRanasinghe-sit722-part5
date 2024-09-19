@@ -1,7 +1,6 @@
 name: Deploy microservice to Kubernetes
 
 on:
-
   push: 
     branches:
       - main
@@ -54,6 +53,10 @@ jobs:
         run:
           CONTAINER_REGISTRY=$(terraform output -raw registry_name)
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
+
+      # Debug the Container Registry Name
+      - name: Debug Container Registry Name
+        run: echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY"
 
       # Login to the Azure Container Registry (ACR)
       - name: Login to Azure Container Registry
