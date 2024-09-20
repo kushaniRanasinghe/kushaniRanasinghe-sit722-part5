@@ -18,7 +18,7 @@ spec:
         image: $CONTAINER_REGISTRY.azurecr.io/book_catalog:$VERSION   
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8036
+        - containerPort: 8071
         env:
         - name: DATABASE_URL
           value: "postgresql://sit722_part5_kush_user:ADFiE1eXAzDwqMnqvhHxO75aakuHhVgi@dpg-crldhg8gph6c73e42j00-a.oregon-postgres.render.com/sit722_part5_kush"
@@ -34,8 +34,8 @@ spec:
     app: book-catalog
   type: LoadBalancer
   ports:
-    - port: 8036
-      targetPort: 8036
+    - port: 8071
+      targetPort: 8071
 
 ---
 # Inventory Management Deployment
@@ -58,7 +58,7 @@ spec:
         image: $CONTAINER_REGISTRY.azurecr.io/inventory_management:$VERSION
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8037
+        - containerPort: 8072
         env:
         - name: DATABASE_URL
           value: "postgresql://sit722_part5_kush_user:ADFiE1eXAzDwqMnqvhHxO75aakuHhVgi@dpg-crldhg8gph6c73e42j00-a.oregon-postgres.render.com/sit722_part5_kush"
@@ -74,5 +74,5 @@ spec:
     app: inventory-management
   type: LoadBalancer
   ports:
-    - port: 8037
-      targetPort: 8037
+    - port: 8072
+      targetPort: 8072
