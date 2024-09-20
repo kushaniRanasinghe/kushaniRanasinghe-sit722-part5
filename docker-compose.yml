@@ -8,9 +8,9 @@ services:
       dockerfile: Dockerfile
     container_name: book_catalog
     ports:
-     - "8087:8087"
+     - "8071:8071"
     environment:
-      - PORT=8087
+      - PORT=8071
       - DATABASE_URL=postgresql://sit722_part5_kush_user:ADFiE1eXAzDwqMnqvhHxO75aakuHhVgi@dpg-crldhg8gph6c73e42j00-a.oregon-postgres.render.com/sit722_part5_kush
 
     restart: "no"
@@ -22,8 +22,8 @@ services:
       dockerfile: Dockerfile
     container_name: inventory_management
     ports:
-     - "8088:8088"
+     - "8072:8072"
     environment:
-      - PORT=8088
+      - PORT=8072
       - DATABASE_URL=postgresql://sit722_part5_kush_user:ADFiE1eXAzDwqMnqvhHxO75aakuHhVgi@dpg-crldhg8gph6c73e42j00-a.oregon-postgres.render.com/sit722_part5_kush
     restart: "no"
