@@ -13,10 +13,6 @@
 #       ./scripts/cd/build-image.sh
 #
 
-set -u # or set -o nounset
-: "$CONTAINER_REGISTRY"
-: "$VERSION"
-: "$NAME"
-: "$DIRECTORY"
+set -e
 
-docker build -t $CONTAINER_REGISTRY/$NAME:$VERSION --file ./$DIRECTORY/Dockerfile-prod ./$DIRECTORY
+docker compose build
