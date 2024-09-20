@@ -48,7 +48,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Get Container Registry Name
-        working-directory: ./scripts/terraform
+        working-directory: ./
         run: |
           CONTAINER_REGISTRY=$(terraform-bin output -raw registry_name)
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
