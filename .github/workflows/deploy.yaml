@@ -101,3 +101,19 @@ jobs:
           CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
           VERSION: ${{ github.sha }}
         run: ./scripts/deploy.sh
+
+      # Wait for resources to start
+      - name: Wait for resources to start
+        run: |
+          echo "Waiting for 30 seconds to allow pods and services to start..."
+          sleep 30
+
+      # Check the status of the pods
+      - name: Get Pods Status
+        run: |
+          kubectl get pods
+
+      # Check the status of the services
+      - name: Get Services Status
+        run: |
+          kubectl get services
