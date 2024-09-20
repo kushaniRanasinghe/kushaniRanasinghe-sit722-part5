@@ -8,3 +8,9 @@ resource "azurerm_container_registry" "container_registry" {
   admin_enabled       = true
   sku                 = "Basic"
 }
+
+# Output the name of the Azure Container Registry
+output "registry_name" {
+  value       = azurerm_container_registry.container_registry.name
+  description = "The name of the Azure Container Registry"
+}
