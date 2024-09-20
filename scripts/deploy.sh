@@ -14,9 +14,14 @@
 #   ./scripts/cd/deploy.sh
 #
 
-set -u # or set -o nounset
-: "$CONTAINER_REGISTRY"
-: "$NAME"
-: "$VERSION"
+if [ -z "$CONTAINER_REGISTRY" ]; then
+  echo "Error: VERSION is not set."
+  exit 1
+fi
 
-envsubst < ./scripts/cd/${NAME}.yaml | kubectl apply -f -
+if [ -z "$VERSION" ]; then
+  echo "Error: VERSION is not set."
+  exit 1
+fi
+
+envsubst < ./scripts/kubernetes/deployment.yaml | kubectl apply -f -
