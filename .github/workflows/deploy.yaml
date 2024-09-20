@@ -47,21 +47,11 @@ jobs:
         working-directory: ./  # Your Terraform files are in the root directory
         run: terraform apply -auto-approve
 
-      # Debugging the Terraform output
-      - name: Debug Terraform Output
-        working-directory: ./  # Root directory for Terraform files
-        run: |
-          terraform output -raw registry_name
-
       # Get the Azure Container Registry Name output from Terraform
       - name: Get Container Registry Name
         working-directory: ./  # Root directory for Terraform files
         run: |
           CONTAINER_REGISTRY=$(terraform output -raw registry_name)
-          if [ -z "$CONTAINER_REGISTRY" ]; then
-            echo "Error: CONTAINER_REGISTRY is empty. Please check your Terraform output."
-            exit 1
-          fi
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
 
       # Debug the Container Registry Name
