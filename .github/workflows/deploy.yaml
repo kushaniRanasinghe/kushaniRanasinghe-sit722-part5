@@ -47,12 +47,17 @@ jobs:
         working-directory: ./  # Your Terraform files are in the root directory
         run: terraform apply -auto-approve
 
-      # Get the Azure Container Registry Name output from Terraform
+            # Get the Azure Container Registry Name output from Terraform
       - name: Get Container Registry Name
         working-directory: ./  # Root directory for Terraform files
         run: |
-          CONTAINER_REGISTRY=$(terraform output -raw registry_name)
+          CONTAINER_REGISTRY=$(terraform output -json | jq -r .registry_name.value)
+          if [ -z "$CONTAINER_REGISTRY" ]; then
+            echo "Error: Unable to retrieve the container registry name."
+            exit 1
+          fi
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
+
 
       # Debug the Container Registry Name
       - name: Debug Container Registry Name
