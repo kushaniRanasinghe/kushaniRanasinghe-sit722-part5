@@ -36,15 +36,15 @@ jobs:
           terraform_version: 1.5.6
 
       - name: Terraform Init
-        working-directory: ./  # Your Terraform files are in the root directory
+        working-directory: ./  
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./  # Your Terraform files are in the root directory
+        working-directory: ./ 
         run: terraform plan
 
       - name: Terraform Apply
-        working-directory: ./  # Your Terraform files are in the root directory
+        working-directory: ./
         run: terraform apply -auto-approve
 
       - name: Get Container Registry Name
