@@ -23,5 +23,5 @@ if [ -z "$VERSION" ]; then
   exit 1
 fi
 
-docker push $CONTAINER_REGISTRY.azurecr.io/book-catalog:$VERSION
-docker push $CONTAINER_REGISTRY.azurecr.io/inventory-management:$VERSION
+docker push $CONTAINER_REGISTRY.azurecr.io/book_catalog:$VERSION
+docker push $CONTAINER_REGISTRY.azurecr.io/inventory_management:$VERSION
