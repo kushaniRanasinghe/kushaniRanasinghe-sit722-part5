@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: book-catalog
-        image: kushanisit722part5.azurecr.io/book-catalog:1
+        image: $CONTAINER_REGISTRY.azurecr.io/book_catalog:$VERSION   
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8087
@@ -55,7 +55,7 @@ spec:
     spec:
       containers: 
       - name: inventory-management
-        image: kushanisit722part5.azurecr.io/inventory_management:1
+        image: $CONTAINER_REGISTRY.azurecr.io/inventory_management:$VERSION
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8088 
