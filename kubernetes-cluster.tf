@@ -32,3 +32,8 @@ resource "azurerm_role_assignment" "role_assignment" {
   scope                            = azurerm_container_registry.container_registry.id
   skip_service_principal_aad_check = true
 }
+
+output "kube_config" {
+  value = base64encode(azurerm_kubernetes_cluster.cluster.kube_config_raw)
+  sensitive = true
+}
