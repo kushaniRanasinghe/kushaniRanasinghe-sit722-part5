@@ -83,11 +83,11 @@ jobs:
 
       # Retrieve Kubernetes Config from Terraform output
       - name: Get Kubernetes Config
-        working-directory: ./  # Root directory for Terraform files
+        working-directory: ./
         run: |
-          KUBECONFIG_CONTENT=$(terraform output -raw kube_config)
+          KUBECONFIG_CONTENT=$(terraform-bin output -raw kube_config)
           echo "KUBECONFIG_CONTENT=$KUBECONFIG_CONTENT" >> $GITHUB_ENV
-
+      
       # Set up kubectl using the KubeConfig output from Terraform
       - name: Set up kubectl
         uses: tale/kubectl-action@v1
