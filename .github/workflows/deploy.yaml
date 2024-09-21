@@ -105,8 +105,8 @@ jobs:
       # Wait for resources to start
       - name: Wait for resources to start
         run: |
-          echo "Waiting for 60 seconds to allow pods and services to start..."
-          sleep 60
+          echo "Waiting for 120 seconds to allow pods and services to start..."
+          sleep 120
 
       # Check the status of the pods
       - name: Get Pods Status
@@ -116,8 +116,8 @@ jobs:
        # Wait for resources to start
       - name: Wait for resources to start
         run: |
-          echo "Waiting for 60 seconds to allow pods and services to start..."
-          sleep 60
+          echo "Waiting for 120 seconds to allow pods and services to start..."
+          sleep 120
 
       # Check the status of the services
       - name: Get Services Status
@@ -127,5 +127,5 @@ jobs:
        # Wait for resources to start
       - name: Wait for resources to start
         run: |
-          echo "Waiting for 60 seconds to allow pods and services to start..."
-          sleep 60
+          echo "Waiting for 120 seconds to allow pods and services to start..."
+          sleep 120
