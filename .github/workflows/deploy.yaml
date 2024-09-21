@@ -36,19 +36,19 @@ jobs:
           terraform_version: 1.5.6
 
       - name: Terraform Init
-        working-directory: ./  
+        working-directory: ./scripts/Terraform 
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./ 
+        working-directory: ./scripts/Terraform
         run: terraform plan
 
       - name: Terraform Apply
-        working-directory: ./
+        working-directory: ./scripts/Terraform
         run: terraform apply -auto-approve
 
       - name: Get Container Registry Name
-        working-directory: ./
+        working-directory: ./scripts/Terraform
         run: |
           CONTAINER_REGISTRY=$(terraform-bin output -raw registry_name)
           echo "CONTAINER_REGISTRY=$CONTAINER_REGISTRY" >> $GITHUB_ENV
@@ -83,7 +83,7 @@ jobs:
 
       # Retrieve Kubernetes Config from Terraform output
       - name: Get Kubernetes Config
-        working-directory: ./
+        working-directory: ./scripts/Terraform
         run: |
           KUBECONFIG_CONTENT=$(terraform-bin output -raw kube_config)
           echo "KUBECONFIG_CONTENT=$KUBECONFIG_CONTENT" >> $GITHUB_ENV
